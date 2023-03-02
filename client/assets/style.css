@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap');
+
+*{
+    margin: 0;
+    font-family: 'MontSerrat';
+}
+
+h1{
+    font-size: 25px;
+    line-height: 1.5;
+}
+
+main{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /*background: url('https://s1.1zoom.me/b5050/866/Battlefield_1_Night_Mill_Moon_Village_528932_1920x1080.jpg');*/
+    background-size: cover;
+    background-position: center;
+}
+
+input{
+    padding-left: 1vw;
+    height: 45px;
+    width: 20vw;
+}
+
+input::placeholder{
+    font-style: italic;
+    color: #A5A8AB;
+}
+
+button{
+    height: 35px;
+}
+
+#container{
+    position: absolute;
+    width: 100%;
+    height: 100vh;
+    display: none;
+    background: #000;
+}
+
+#message{
+    width: 20%;
+    height: 100%;
+    background: red;
+    position: absolute;
+    right: 0;
+}
+
+#spawnMessage{
+    width: 100%;
+    height: 95vh;
+    background: gray;
+    overflow-y: scroll;
+}
+
+#writeMessage{
+    width: calc(100% - 2vh);
+    height: 5vh;
+    background: green;
+    display: flex;
+    padding-left: 2vh;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+}
+
+.onMessage{
+    padding: 2vh;
+    border: 1px solid black;
+}
+
+#game{
+    width: 80%;
+    height: 100vh;
+    background: red;
+    position: absolute;
+}
+
+#msgSpawnContainer{
+    width: 80%;
+    height: 100vh;
+    background: red;
+    position: absolute;
+    display: none;
+}
+
+#roleTitle{
+    padding: 2vh;
+}
