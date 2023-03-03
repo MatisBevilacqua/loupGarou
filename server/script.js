@@ -7,6 +7,8 @@ const storageAllUser = []
 const cupidon = []
 const die = []
 let token;
+let arrStorageUserNotTurn;
+let sendNotPlayerTurn;
 let r;
 let userTurn = 0;
 const roles = [ 'Villageois', 'Loup Garou', 'Sorciere', 'Cupidon', 'Loup Garou', 'Loup Garou']
@@ -40,18 +42,45 @@ const userTurnAccrement = () => {
             if(userTurn === 1){
                 const arrPlayerCupidon =  Object.values(storageUser)
                 const arrPlayerResultCupidon = arrPlayerCupidon.filter(arr => arr.turn !== userTurn)
-                console.log(arrPlayerResultCupidon);
-                send(storageUser[e].connection, "yourTurnCupidon",  { arrPlayerResultCupidon })
+                const cupidonAllPlayers = []
+                for(const l in arrPlayerResultCupidon){
+                    cupidonAllPlayers.push(arrPlayerResultCupidon[l].name)
+                }
+                arrStorageUserNotTurn = Object.values(storageUser)
+                sendNotPlayerTurn = arrStorageUserNotTurn.filter(x => x.connection !== storageUser[e].connection )
+                for(const j in sendNotPlayerTurn){
+                    send(sendNotPlayerTurn[j].connection, "notTurn")
+                }
+                console.log(cupidonAllPlayers);
+                send(storageUser[e].connection, "yourTurnCupidon", cupidonAllPlayers)
             }else if( userTurn === 2){
                 const arrPlayerLoup =  Object.values(storageUser)
                 const arrPlayerResultLoup = arrPlayerLoup.filter(arr => arr.turn !== userTurn)
-                console.log(arrPlayerResultLoup);
-                send(storageUser[e].connection, "yourTurnLoup", { arrPlayerResultLoup })
+                const loupAllPlayers = []
+                for(const e in arrPlayerResultLoup){
+                    loupAllPlayers.push(arrPlayerResultLoup[e].name)
+                }
+                arrStorageUserNotTurn = Object.values(storageUser)
+                sendNotPlayerTurn = arrStorageUserNotTurn.filter(x => x.connection !== storageUser[e].connection )
+                for(const g in sendNotPlayerTurn){
+                    send(sendNotPlayerTurn[g].connection, "notTurn")
+                }
+                console.log(loupAllPlayers);
+                send(storageUser[e].connection, "yourTurnLoup", loupAllPlayers)
             }else if( userTurn === 3){
                 const arrPlayerSorciere =  Object.values(storageUser)
                 const arrPlayerResultSorciere = arrPlayerSorciere.filter(arr => arr.turn !== userTurn)
-                console.log(arrPlayerResultSorciere);
-                send(storageUser[e].connection, "yourTurnSorciere", { arrPlayerResultSorciere })
+                const sorciereAllPlayers = []
+                for(const b in arrPlayerResultSorciere){
+                    sorciereAllPlayers.push(arrPlayerResultSorciere[b].name)
+                }
+                arrStorageUserNotTurn = Object.values(storageUser)
+                sendNotPlayerTurn = arrStorageUserNotTurn.filter(x => x.connection !== storageUser[e].connection )
+                for(const j in sendNotPlayerTurn){
+                    send(sendNotPlayerTurn[j].connection, "notTurn")
+                }
+                console.log(sorciereAllPlayers);
+                send(storageUser[e].connection, "yourTurnSorciere", sorciereAllPlayers)
             }
         }
     }
@@ -91,7 +120,7 @@ app.ws('/', function (ws, req) {
                     else if(storageUser[data.token].role === "Villageois"){
                         storageUser[data.token].turn = 4
                     }
-                    console.log(storageAllUser.length);
+                    // console.log(storageAllUser.length);
                     let userLenght = storageAllUser.length;
                     for(const i of storageAllUser){
                         if(userLenght !== 7){
@@ -99,7 +128,7 @@ app.ws('/', function (ws, req) {
                         }
                     }
                     if(userLenght === 6){
-                        userTurnAccrement();
+                        // userTurnAccrement();
                         for(let i = 1; i < 6; i++){
                             setTimeout( () => {
                                 userTurnAccrement();

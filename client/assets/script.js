@@ -7,6 +7,8 @@ const containerMessageSpawn = document.querySelector('#spawnMessage');
 const msgSpawnContainer = document.querySelector('#msgSpawnContainer');
 const msgSpawn = document.querySelector('#msgSpwan');
 const roleTitle = document.querySelector('#roleTitle');
+const notTurnContainer = document.querySelector('#notTurn');
+const cardParent = document.querySelector('.card__container');
 let ws = new WebSocket("ws://localhost:3000");
 
 const send = (data) => {
@@ -63,14 +65,51 @@ ws.onmessage = function (msg) {
                 break;
 
             case "numberUser":
-                //Afficher le nombre de user connecter
-                console.log(data);
+                //Afficher le nombre de user connecter console.log(data);
                 msgSpawnContainer.style.display = data !== 6 ? "block" : "none"
                 msgSpawn.textContent = data
                 break;
 
             case "yourTurn":
-                console.log("C'est ton tour")
+                // C'est a tel carte de jouer, console.log("C'est ton tour")
+                break;
+
+            case "notTurn":
+                notTurnContainer.style.display = "block"
+                notTurnContainer.textContent = "Ce n'est pas ton tour"
+            break;
+
+            case "yourTurnCupidon":
+                notTurnContainer.style.display = "none"
+                msgSpawnContainer.style.display = "block"
+                for(let i = 0; i < data.length; i++){
+                    let card = document.createElement("div");
+                    card.className = "card";
+                    card.textContent = data[i]
+                    cardParent.appendChild(card);
+                }
+                break;
+
+            case "yourTurnLoup":
+                notTurnContainer.style.display = "none"
+                msgSpawnContainer.style.display = "block"
+                for(let i = 0; i < data.length; i++){
+                    let card = document.createElement("div");
+                    card.className = "card";
+                    card.textContent = data[i]
+                    cardParent.appendChild(card);
+                }
+                break;
+
+            case "yourTurnSorciere":
+                notTurnContainer.style.display = "none"
+                msgSpawnContainer.style.display = "block"
+                for(let i = 0; i < data.length; i++){
+                    let card = document.createElement("div");
+                    card.className = "card";
+                    card.textContent = data[i]
+                    cardParent.appendChild(card);
+                }
                 break;
         }
     }catch(error){
