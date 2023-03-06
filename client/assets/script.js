@@ -9,6 +9,7 @@ const msgSpawn = document.querySelector('#msgSpwan');
 const roleTitle = document.querySelector('#roleTitle');
 const notTurnContainer = document.querySelector('#notTurn');
 const cardParent = document.querySelector('.card__container');
+let arrChoice = [];
 let ws = new WebSocket("ws://localhost:3000");
 
 const send = (data) => {
@@ -39,10 +40,46 @@ const displayMessage = (data, name, message) => {
     let p = document.createElement('p')
     onMessage.className = 'onMessage'
     containerMessageSpawn.appendChild(onMessage)
+    containerMessageSpawn.appendChild(b)
     h1.textContent = data.messageReadyNameAndMessage.name
     p.textContent = data.messageReadyNameAndMessage.message
     onMessage.appendChild(h1)
     onMessage.appendChild(p)
+}
+
+const validateChoice = (card__container, e) => {
+    arrChoice.push(card__container[e].textContent)
+}
+
+const sendChoice = () => {
+    let token = localStorage.getItem('token');
+    const choice = { token:token, name: arrChoice}
+    send({ event: "choiceCard", data: choice})
+}
+
+const clickCard = (data) => {
+    // Creation des cartes
+    let card;
+    for(let i = 0; i < data.length; i++){
+        card = document.createElement("div");
+        card.className = "card";
+        card.textContent = data[i]
+        cardParent.appendChild(card);
+    }
+    // Clicker sur les cartes
+    const card__container = document.querySelectorAll('.card')
+    for(let e = 0; e < card__container.length; e++){
+        card__container[e].addEventListener('click', () => {
+            validateChoice(card__container, e)
+        })
+    }
+
+    // Creation du bouton pour valider le choix
+    let buttonValidate = document.createElement('button')
+    buttonValidate.textContent = 'Valider'
+    buttonValidate.className = 'validate'
+    cardParent.appendChild(buttonValidate)
+    buttonValidate.addEventListener('click', sendChoice)
 }
 
 ws.onmessage = function (msg) {
@@ -82,34 +119,19 @@ ws.onmessage = function (msg) {
             case "yourTurnCupidon":
                 notTurnContainer.style.display = "none"
                 msgSpawnContainer.style.display = "block"
-                for(let i = 0; i < data.length; i++){
-                    let card = document.createElement("div");
-                    card.className = "card";
-                    card.textContent = data[i]
-                    cardParent.appendChild(card);
-                }
+                clickCard(data)
                 break;
 
             case "yourTurnLoup":
                 notTurnContainer.style.display = "none"
                 msgSpawnContainer.style.display = "block"
-                for(let i = 0; i < data.length; i++){
-                    let card = document.createElement("div");
-                    card.className = "card";
-                    card.textContent = data[i]
-                    cardParent.appendChild(card);
-                }
+                clickCard(data)
                 break;
 
             case "yourTurnSorciere":
                 notTurnContainer.style.display = "none"
                 msgSpawnContainer.style.display = "block"
-                for(let i = 0; i < data.length; i++){
-                    let card = document.createElement("div");
-                    card.className = "card";
-                    card.textContent = data[i]
-                    cardParent.appendChild(card);
-                }
+                clickCard(data)
                 break;
         }
     }catch(error){

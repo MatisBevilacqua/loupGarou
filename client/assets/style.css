@@ -121,4 +121,6 @@ button{
     justify-content: center;
     font-size: 18px;
     color: #A5A8AB;
+    transition: 0.3s;
 }
+

@@ -34,6 +34,16 @@ const postUserStorage = (token, ws) => {
     storageUser[token] = { connection: ws, message: []}
 }
 
+const getTokenRole = (data) => {
+    if(storageUser[data.token].role === 'Loup Garou'){
+        die.push(data.name)
+        console.log(storageUser[data.token]);
+        console.log(die);
+    }else if(storageUser[data.token].role === 'Cupidon'){
+        cupidon.push(data.name)
+        console.log(cupidon);
+    }
+}
 const userTurnAccrement = () => {
     userTurn += 1;
     console.log(userTurn)
@@ -42,7 +52,7 @@ const userTurnAccrement = () => {
             if(userTurn === 1){
                 const arrPlayerCupidon =  Object.values(storageUser)
                 const arrPlayerResultCupidon = arrPlayerCupidon.filter(arr => arr.turn !== userTurn)
-                const cupidonAllPlayers = []
+                cupidonAllPlayers = []
                 for(const l in arrPlayerResultCupidon){
                     cupidonAllPlayers.push(arrPlayerResultCupidon[l].name)
                 }
@@ -68,19 +78,13 @@ const userTurnAccrement = () => {
                 console.log(loupAllPlayers);
                 send(storageUser[e].connection, "yourTurnLoup", loupAllPlayers)
             }else if( userTurn === 3){
-                const arrPlayerSorciere =  Object.values(storageUser)
-                const arrPlayerResultSorciere = arrPlayerSorciere.filter(arr => arr.turn !== userTurn)
-                const sorciereAllPlayers = []
-                for(const b in arrPlayerResultSorciere){
-                    sorciereAllPlayers.push(arrPlayerResultSorciere[b].name)
-                }
                 arrStorageUserNotTurn = Object.values(storageUser)
                 sendNotPlayerTurn = arrStorageUserNotTurn.filter(x => x.connection !== storageUser[e].connection )
                 for(const j in sendNotPlayerTurn){
                     send(sendNotPlayerTurn[j].connection, "notTurn")
                 }
-                console.log(sorciereAllPlayers);
-                send(storageUser[e].connection, "yourTurnSorciere", sorciereAllPlayers)
+                console.log(die)
+                send(storageUser[e].connection, "yourTurnSorciere", die)
             }
         }
     }
@@ -98,6 +102,7 @@ app.ws('/', function (ws, req) {
             switch(event){
                 case "name":
                     storageUser[data.token].name = data.name;
+                    storageUser[data.token].life = true
                     const userReady = storageUser[data.token].connection
                     shuffle(roles)
                     r = getRandomNumber(roles.length)
@@ -136,7 +141,7 @@ app.ws('/', function (ws, req) {
                         }
                     }
                     send(userReady, "ready", { role })
-                    break;
+                    break       ;
 
                 case "message":
                     storageUser[data.token].message.push(data.message)
@@ -145,6 +150,10 @@ app.ws('/', function (ws, req) {
                     for(const i of storageAllUser){
                         send(i, "messageReady", { messageReadyNameAndMessage } )
                     }
+                    break;
+
+                case "choiceCard":
+                    getTokenRole(data)
                     break;
             }
         } catch (error) {
